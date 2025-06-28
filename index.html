@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>सेतु-सेवा पोर्टल - महाराष्ट्र सरकार</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #4CAF50; /* Green */
+      --primary-light: #81C784; /* Light Green */
+      --primary-dark: #388E3C; /* Dark Green */
+      --secondary: #9C27B0; /* Purple */
+      --accent: #7E57C2; /* Deep Purple */
+      --light: #F1F8E9; /* Very Light Green */
+      --white: #ffffff;
+      --gray: #f5f5f5;
+      --dark: #2E7D32; /* Dark Green Text */
+      --text: #455A64; /* Dark Gray-Blue */
+      --success: #4CAF50; /* Green */
+      --error: #F44336; /* Red */
+      --warning: #FF9800; /* Amber */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
+      background: linear-gradient(135deg, #F1F8E9, #E8F5E9); /* Light green gradient */
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(76, 175, 80, 0.1); /* Green shadow */
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .logo-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* App Title */
+    .app-title {
+      text-align: center;
+      padding: 25px 20px;
+      background-color: var(--white);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .app-title h1 {
+      font-size: 2rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .app-title h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent), var(--secondary)); /* Purple gradient */
+      border-radius: 3px;
+    }
+
+    .app-title p {
+      font-size: 1rem;
+      color: var(--text);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Tabs */
+    .tab-container {
+      display: flex;
+      background-color: var(--gray);
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .tab {
+      padding: 15px 25px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text);
+      position: relative;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab.active {
+      color: var(--primary-dark);
+      font-weight: 600;
+      background-color: var(--white);
+      border-radius: 8px 8px 0 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent), var(--secondary)); /* Purple gradient */
+    }
+
+    .tab:hover:not(.active) {
+      color: var(--primary);
+    }
+
+    .tab-badge {
+      background-color: var(--accent); /* Purple */
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 5px;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+      padding: 30px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Services Grid */
+    .services-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .service-card {
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1); /* Purple shadow */
+      overflow: hidden;
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(156, 39, 176, 0.2); /* Stronger purple shadow */
+    }
+
+    .service-header {
+      background: linear-gradient(to right, var(--primary), var(--primary-light)); /* Green gradient */
+      color: rgb(255, 255, 255);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .service-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+    }
+
+    .service-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .service-body {
+      padding: 20px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      border: 1px solid #C8E6C9; /* Light green border */
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); /* Green shadow */
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .btn {
+      background: linear-gradient(to right, var(--primary), var(--primary-light)); /* Green gradient */
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2); /* Green shadow */
+    }
+
+    .btn:hover {
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3); /* Stronger green shadow */
+    }
+
+    .btn-secondary {
+      background: var(--gray);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Recent Activity */
+    .recent-activity {
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1); /* Purple shadow */
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .activity-list {
+      list-style: none;
+    }
+
+    .activity-item {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(76, 175, 80, 0.1); /* Green background */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .activity-details {
+      flex: 1;
+    }
+
+    .activity-service {
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 0.95rem;
+    }
+
+    .activity-code {
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    .activity-time {
+      font-size: 0.8rem;
+      color: #718096;
+    }
+
+    .activity-badge {
+      background-color: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Excel Tab Styles */
+    .excel-upload-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1); /* Purple shadow */
+      padding: 25px;
+      text-align: center;
+      margin-bottom: 30px;
+      border: 2px dashed #BA68C8; /* Light purple */
+      transition: var(--transition);
+    }
+
+    .excel-upload-card:hover {
+      border-color: var(--secondary);
+      background-color: rgba(156, 39, 176, 0.03); /* Very light purple */
+    }
+
+    .upload-icon {
+      font-size: 2.5rem;
+      color: var(--secondary); /* Purple */
+      margin-bottom: 15px;
+    }
+
+    .upload-text {
+      margin-bottom: 20px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-label {
+      display: inline-block;
+      background: linear-gradient(to right, var(--secondary), var(--accent)); /* Purple gradient */
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      margin-bottom: 15px;
+      box-shadow: 0 4px 6px rgba(156, 39, 176, 0.2); /* Purple shadow */
+    }
+
+    .file-label:hover {
+      background: linear-gradient(to right, #7B1FA2, var(--secondary)); /* Darker purple gradient */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(156, 39, 176, 0.3); /* Stronger purple shadow */
+    }
+
+    .file-name {
+      font-size: 0.9rem;
+      color: var(--secondary);
+      margin-top: 10px;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      border: 1px solid #C8E6C9; /* Light green */
+      border-radius: 30px;
+      font-size: 1rem;
+      transition: var(--transition);
+      box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1); /* Green shadow */
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); /* Green shadow */
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+    }
+
+    .stats-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1); /* Purple shadow */
+      padding: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(156, 39, 176, 0.1); /* Purple background */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--secondary);
+    }
+
+    .stat-text {
+      font-size: 0.9rem;
+    }
+
+    .stat-number {
+      font-weight: 600;
+      color: var(--secondary);
+      font-size: 1.1rem;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1); /* Purple shadow */
+      margin-bottom: 30px;
+      max-height: 500px;
+      overflow-y: auto;
+      background-color: var(--white);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .data-table th {
+      background-color: var(--secondary); /* Purple */
+      color: white;
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+    }
+
+    .data-table td {
+      padding: 10px 15px;
+      border-bottom: 1px solid #EDE7F6; /* Light purple */
+    }
+
+    .data-table tr:nth-child(even) {
+      background-color: var(--light);
+    }
+
+    .data-table tr:hover {
+      background-color: #E8F5E9; /* Very light green */
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      color: #C8E6C9; /* Light green */
+      margin-bottom: 15px;
+    }
+
+    /* Status Check Tab */
+    .status-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1); /* Purple shadow */
+      padding: 25px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .status-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .status-icon {
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    .status-title {
+      font-size: 1.3rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .status-item {
+      margin-bottom: 10px;
+    }
+
+    .status-label {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .status-value {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .progress-container {
+      margin: 25px 0;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background-color: #E8F5E9; /* Very light green */
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--accent)); /* Green to purple gradient */
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .timeline {
+      margin-top: 30px;
+    }
+
+    .timeline-header {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    .timeline-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1); /* Green shadow */
+    }
+
+    .timeline-table th {
+      background-color: #F1F8E9; /* Very light green */
+      padding: 12px 15px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .timeline-table td {
+      padding: 10px 15px;
+      border-bottom: 1px solid #EDE7F6; /* Light purple */
+      font-size: 0.85rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-complete {
+      background-color: rgba(76, 175, 80, 0.1); /* Green background */
+      color: var(--success);
+    }
+
+    .status-pending {
+      background-color: rgba(156, 39, 176, 0.1); /* Purple background */
+      color: var(--secondary);
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transform: translateX(150%);
+      transition: transform 0.4s ease;
+      max-width: 350px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification.success {
+      background: linear-gradient(to right, var(--primary), #81C784); /* Green gradient */
+    }
+
+    .notification.error {
+      background: linear-gradient(to right, var(--error), #E57373); /* Red gradient */
+    }
+
+    .notification.warning {
+      background: linear-gradient(to right, var(--warning), #FFB74D); /* Amber gradient */
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text);
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      background-color: var(--white);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 10px;
+    }
+
+    .footer-link {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    /* Excel Section in Download Tab */
+    .download-excel-section {
+      margin-top: 30px;
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(156, 39, 176, 0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .logo-container {
+        justify-content: center;
+      }
+      
+      .app-title h1 {
+        font-size: 1.6rem;
+      }
+      
+      .tab-container {
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+      
+      .tab {
+        white-space: nowrap;
+      }
+      
+      .services-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tab-content {
+        padding: 20px 15px;
+      }
+      
+      .app-title h1 {
+        font-size: 1.4rem;
+      }
+      
+      .app-title p {
+        font-size: 0.9rem;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-container">
+        <img src="https://img.restaurantguru.com/w550/h367/r873-Maha-E-Seva-Setu-Kendra-logo.jpg" alt="महाराष्ट्र सरकार">
+        <span class="logo-text">आपले सरकार सेवा केंद्र कणकवलीे</span>
+      </div>
+      <div class="logo-container">
+        <img src="https://www.gujaratinfotech.com/E-setuSlider/images/E-setu-logo.png" alt="ई-सेवा सेतू">
+      </div>
+      <div class="logo-container">
+        <img src="https://tse1.mm.bing.net/th?id=OIP.K4B2EjHy3u6FHLrdsCp-1gHaHa&amp;pid=Api&amp;P=0&amp;h=180" alt="डिजिटल महाराष्ट्र">
+        <span class="logo-text">डिजिटल महाराष्ट्र</span>
+      </div>
+    </div>
+
+    <!-- App Title -->
+    <div class="app-title">
+      <h1>सेतु-सेवा पोर्टल</h1>
+      <p>एकाच ठिकाणी सर्व सेतुे सेवा - अर्ज स्थिती, प्रमाणपत्रे, दस्तऐवज आणि अधिक</p>
+    </div>
+
+    <!-- Tab Container -->
+    <div class="tab-container">
+      <div class="tab active" onclick="switchTab('downloadTab')">
+        <i class="fas fa-download"></i> डाऊनलोड सुविधा
+      </div>
+    
+      <div class="tab" onclick="switchTab('statusTab')">
+        <i class="fas fa-search"></i> स्थिती तपासा
+      </div>
+      
+    </div>
+
+    <!-- Download Tab Content -->
+    <div id="downloadTab" class="tab-content active">
+      <div class="services-container">
+        <!-- Application Status -->
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="service-title"> प्रतिज्ञापत्र प्रिंट करा </div>
+          </div>
+          <div class="service-body">
+            <div class="input-group">
+              <label class="input-label" for="codeInput1">अर्ज ID नंबर</label>
+              <i class="input-icon fas fa-hashtag"></i>
+              <input type="text" id="codeInput1" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+            </div>
+            <button class="btn" onclick="downloadFile(1)">
+              <span class="spinner" id="spinner1" style="display: none;"></span>
+              <i class="fas fa-search"></i>प्रिंट करा            
+            </button>
+          </div>
+        </div>
+
+        <!-- Certificate Download -->
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-certificate"></i>
+            </div>
+            <div class="service-title">प्रमाणपत्र डाऊनलोड</div>
+          </div>
+          <div class="service-body">
+            <div class="input-group">
+              <label class="input-label" for="codeInput2">दस्तऐवज क्रमांक</label>
+              <i class="input-icon fas fa-barcode"></i>
+              <input type="text" id="codeInput2" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+            </div>
+            <button class="btn" onclick="downloadFile(2)">
+              <span class="spinner" id="spinner2" style="display: none;"></span>
+              <i class="fas fa-download"></i> डाऊनलोड करा
+            </button>
+          </div>
+        </div>
+
+        <!-- Document Upload -->
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="service-title">दस्तऐवज जोडा</div>
+          </div>
+          <div class="service-body">
+            <div class="input-group">
+              <label class="input-label" for="codeInput3">दस्तऐवज क्रमांक</label>
+              <i class="input-icon fas fa-key"></i>
+              <input type="text" id="codeInput3" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+            </div>
+            <button class="btn" onclick="downloadFile(3)">
+              <span class="spinner" id="spinner3" style="display: none;"></span>
+              <i class="fas fa-plus-circle"></i> दस्तऐवज जोडा
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Excel Section in Download Tab -->
+      <div class="download-excel-section">
+        <h3 class="section-title">
+          <i class="fas fa-file-excel"></i> Excel फाईल वरून डाऊनलोड
+        </h3>
+        
+        <div class="excel-upload-card">
+          <div class="upload-icon">
+            <i class="fas fa-file-upload"></i>
+          </div>
+          <h3 class="upload-text">Excel फाईल अपलोड करा</h3>
+          <input type="file" id="excelFileDownloadTab" class="file-input" accept=".xlsx, .xls" />
+          <label for="excelFileDownloadTab" class="file-label">
+            <i class="fas fa-folder-open"></i> Excel फाईल निवडा
+          </label>
+          <div id="fileNameDownloadTab" class="file-name">कोणतीही फाईल निवडलेली नाही</div>
+        </div>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="searchInputDownloadTab" class="search-input" placeholder="डेटा शोधा..." onkeyup="searchExcelTableDownloadTab()">
+        </div>
+
+        <div class="table-container" id="excelTableContainerDownloadTab">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <h3>डेटा सापडला नाही</h3>
+            <p>कृपया Excel फाईल अपलोड करा किंवा शोध प्रश्न प्रविष्ट करा</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="recent-activity">
+        <h3 class="section-title">
+          <i class="fas fa-history"></i> शेवटचे डाऊनलोड
+        </h3>
+        <ul class="activity-list" id="recentDownloads">
+          <li class="activity-item">
+            <div class="activity-info">
+              <div class="activity-icon">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <div class="activity-details">
+                <div class="activity-service">अजून कोणतेही डाऊनलोड नाहीत</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Excel Tab Content -->
+    <div id="excelTab" class="tab-content">
+      <!-- Stats Cards -->
+      <div class="stats-card">
+        <div class="stat-item">
+          <div class="stat-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="stat-text">
+            एकूण पंक्ती: <span class="stat-number" id="totalRows">0</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <i class="fas fa-filter"></i>
+          </div>
+          <div class="stat-text">
+            सापडलेले: <span class="stat-number" id="filteredRows">0</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <i class="fas fa-columns"></i>
+          </div>
+          <div class="stat-text">
+            स्तंभ: <span class="stat-number" id="totalColumns">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="excel-upload-card">
+        <div class="upload-icon">
+          <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="upload-text">Excel फाईल अपलोड करा</h3>
+        <input type="file" id="excelFile" class="file-input" accept=".xlsx, .xls" />
+        <label for="excelFile" class="file-label">
+          <i class="fas fa-folder-open"></i> Excel फाईल निवडा
+        </label>
+        <div id="fileName" class="file-name">कोणतीही फाईल निवडलेली नाही</div>
+      </div>
+
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="डेटा शोधा..." onkeyup="searchExcelTable()">
+      </div>
+
+      <div class="table-container" id="excelTableContainer">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <h3>डेटा सापडला नाही</h3>
+          <p>कृपया Excel फाईल अपलोड करा किंवा शोध प्रश्न प्रविष्ट करा</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Check Tab Content -->
+    <div id="statusTab" class="tab-content">
+      <div class="status-card">
+        <div class="status-header">
+          <i class="fas fa-search status-icon"></i>
+          <h2 class="status-title">अर्ज स्थिती तपासा</h2>
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label" for="statusCheckId">अर्ज क्रमांक</label>
+          <i class="input-icon fas fa-hashtag"></i>
+          <input type="text" id="statusCheckId" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+        </div>
+        
+        <div class="button-group" style="margin-top: 20px;">
+          <button class="btn" onclick="checkApplicationStatus()">
+            <span class="spinner" id="statusSpinner" style="display: none;"></span>
+            <i class="fas fa-search"></i> स्थिती तपासा
+          </button>
+        </div>
+        
+        <div id="statusResult" style="display: none; margin-top: 30px;">
+          <div class="status-grid">
+            <div class="status-item">
+              <div class="status-label">अर्ज क्रमांक</div>
+              <div class="status-value" id="statusAppId">-</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">सद्य स्थिती</div>
+              <div class="status-value" id="statusCurrent">-</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">अर्ज तारीख</div>
+              <div class="status-value" id="statusDate">-</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">अंतिम अद्यतन</div>
+              <div class="status-value" id="statusUpdate">-</div>
+            </div>
+          </div>
+          
+          <div class="progress-container">
+            <div class="status-label">प्रगती स्थिती</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="statusProgress"></div>
+            </div>
+            <div class="progress-labels">
+              <span>प्रारंभ</span>
+              <span>पूर्ण</span>
+            </div>
+          </div>
+          
+          <div class="timeline">
+            <div class="timeline-header">प्रक्रिया माहिती</div>
+            <table class="timeline-table">
+              <thead>
+                <tr>
+                  <th>चरण</th>
+                  <th>स्थिती</th>
+                  <th>तारीख</th>
+                </tr>
+              </thead>
+              <tbody id="statusTimeline">
+                <!-- Timeline will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-links">
+        <a href="#" class="footer-link">सहाय्य</a>
+        <a href="#" class="footer-link">वारंवार विचारले जाणारे प्रश्न</a>
+        <a href="#" class="footer-link">संपर्क</a>
+        <a href="#" class="footer-link">अटी आणि नियम</a>
+      </div>
+      <p>© 2025 ई मुद्रा आपले सरकार सेवा केंद्र </p>
+      <p>डिजिटल इंडिया मोहीम अंतर्गत | हेल्पलाइन: ९८९०८६९७९३</p>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification"></div>
+
+  <script>
+    // Tab Switching Functionality
+    function switchTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Deactivate all tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Activate selected tab
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // Service configuration
+    const services = {
+      1: {
+        name: "अर्ज स्थिती तपासा",
+        baseLink: "https://cscservices.mahaonline.gov.in/General_Affidavit/GeneralAffidavitCertificateEn.aspx?AppID=%CODE%&ServiceId=1268",
+        inputId: "codeInput1",
+        spinnerId: "spinner1"
+      },
+      2: {
+        name: "प्रमाणपत्र डाऊनलोड",
+        baseLink: "https://cscservices.mahaonline.gov.in/Edistrict/Handler/GetFile.ashx?From=ApplicationStatus&ID=%CODE%&sDist=529",
+        inputId: "codeInput2",
+        spinnerId: "spinner2"
+      },
+      3: {
+        name: "दस्तऐवज जोडा",
+        baseLink: "https://cscservices.mahaonline.gov.in/Edistrict/WorkFlow/Attachment.aspx?ApplicantId=%CODE%&ServiceID=1253&ID=INIT&RowID=38277130&FileID=11580882&CreatedOn=25/04/2025%2016:09:40",
+        inputId: "codeInput3",
+        spinnerId: "spinner3"
+      }
+    };
+
+    // Store recent downloads
+    let recentDownloads = JSON.parse(localStorage.getItem('recentDownloads')) || [];
+    
+    // DOM elements
+    const notification = document.getElementById("notification");
+    const recentDownloadsContainer = document.getElementById("recentDownloads");
+    
+    // Update recent downloads list
+    function updateRecentDownloads() {
+      if (recentDownloads.length === 0) {
+        recentDownloadsContainer.innerHTML = `
+          <li class="activity-item">
+            <div class="activity-info">
+              <div class="activity-icon">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <div class="activity-details">
+                <div class="activity-service">अजून कोणतेही डाऊनलोड नाहीत</div>
+              </div>
+            </div>
+          </li>
+        `;
+        return;
+      }
+      
+      recentDownloadsContainer.innerHTML = '';
+      recentDownloads.slice(0, 5).forEach(download => {
+        const activityItem = document.createElement('li');
+        activityItem.className = 'activity-item';
+        
+        let iconClass = 'fa-file-alt';
+        if (download.service.includes('प्रमाणपत्र')) iconClass = 'fa-certificate';
+        if (download.service.includes('दस्तऐवज')) iconClass = 'fa-file-pdf';
+        
+        activityItem.innerHTML = `
+          <div class="activity-info">
+            <div class="activity-icon">
+              <i class="fas ${iconClass}"></i>
+            </div>
+            <div class="activity-details">
+              <div class="activity-service">${download.service}</div>
+              <div class="activity-code">क्रमांक: ${download.code}</div>
+            </div>
+          </div>
+          <div class="activity-time">${download.time}</div>
+        `;
+        
+        // Add click event to open the link again
+        activityItem.onclick = function() {
+          const serviceId = parseInt(download.serviceType.replace('सेवा ', ''));
+          const finalLink = services[serviceId].baseLink.replace("%CODE%", download.code);
+          window.open(finalLink, '_blank');
+        };
+        
+        recentDownloadsContainer.appendChild(activityItem);
+      });
+    }
+    
+    // Show notification
+    function showNotification(message, type = 'success') {
+      notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        ${message}
+      `;
+      notification.className = `notification ${type} show`;
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Download file function - opens in new tab
+    function downloadFile(serviceId) {
+      const service = services[serviceId];
+      const input = document.getElementById(service.inputId);
+      const spinner = document.getElementById(service.spinnerId);
+      const button = input.closest('.service-card').querySelector('.btn');
+      const code = input.value.trim();
+      
+      if (code === "") {
+        showNotification("कृपया कोड टाका.", "error");
+        input.focus();
+        return;
+      }
+      
+      if (!/^[a-zA-Z0-9]+$/.test(code)) {
+        showNotification("कृपया फक्त अक्षरे आणि अंक टाका.", "error");
+        input.focus();
+        return;
+      }
+      
+      // Show loading spinner
+      spinner.style.display = "inline-block";
+      button.disabled = true;
+      
+      // Simulate API delay
+      setTimeout(() => {
+        const finalLink = service.baseLink.replace("%CODE%", code);
+        
+        // Add to recent downloads
+        const now = new Date();
+        const timeString = now.toLocaleString('mr-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        
+        recentDownloads.unshift({
+          code: code,
+          service: service.name,
+          serviceType: `सेवा ${serviceId}`,
+          time: timeString
+        });
+        
+        // Save to localStorage
+        localStorage.setItem('recentDownloads', JSON.stringify(recentDownloads));
+        
+        // Update UI
+        updateRecentDownloads();
+        
+        // Open in new tab
+        window.open(finalLink, '_blank');
+        
+        // Reset form
+        input.value = "";
+        
+        // Hide spinner and enable button
+        spinner.style.display = "none";
+        button.disabled = false;
+        
+        // Show success message
+        showNotification(`${service.name} सेवा: कोड ${code} साठी फाईल नवीन टॅबमध्ये उघडली जात आहे!`, "success");
+      }, 1500);
+    }
+
+    // Excel Search Functionality for Download Tab
+    let excelDataDownloadTab = [], filteredExcelDataDownloadTab = [];
+
+    document.getElementById('excelFileDownloadTab').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      document.getElementById('fileNameDownloadTab').textContent = file.name;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          excelDataDownloadTab = XLSX.utils.sheet_to_json(worksheet);
+          filteredExcelDataDownloadTab = [...excelDataDownloadTab];
+          
+          displayExcelTableDownloadTab(filteredExcelDataDownloadTab);
+        } catch (error) {
+          showNotification("फाईल वाचताना त्रुटी आली. कृपया वैध Excel फाईल निवडा.", "error");
+          console.error(error);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function displayExcelTableDownloadTab(data) {
+      const tableContainer = document.getElementById('excelTableContainerDownloadTab');
+      
+      if (!data || data.length === 0) {
+        tableContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <h3>डेटा सापडला नाही</h3>
+            <p>कृपया Excel फाईल अपलोड करा किंवा शोध प्रश्न प्रविष्ट करा</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let tableHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              ${Object.keys(data[0]).map(header => `<th>${header}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      data.forEach(row => {
+        tableHTML += `
+          <tr>
+            ${Object.values(row).map(val => `<td>${val !== undefined && val !== null ? val : ''}</td>`).join('')}
+          </tr>
+        `;
+      });
+
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+
+      tableContainer.innerHTML = tableHTML;
+    }
+
+    function searchExcelTableDownloadTab() {
+      const input = document.getElementById('searchInputDownloadTab').value.toLowerCase();
+      
+      if (!input) {
+        filteredExcelDataDownloadTab = [...excelDataDownloadTab];
+      } else {
+        filteredExcelDataDownloadTab = excelDataDownloadTab.filter(row => {
+          return Object.values(row).some(val =>
+            val?.toString().toLowerCase().includes(input)
+          );
+        });
+      }
+      
+      displayExcelTableDownloadTab(filteredExcelDataDownloadTab);
+    }
+
+    // Excel Search Functionality for Excel Tab
+    let excelData = [];
+    let filteredExcelData = [];
+
+    document.getElementById('excelFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      document.getElementById('fileName').textContent = file.name;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          excelData = XLSX.utils.sheet_to_json(worksheet);
+          filteredExcelData = [...excelData];
+          
+          updateExcelStats();
+          displayExcelTable(filteredExcelData);
+        } catch (error) {
+          showNotification("फाईल वाचताना त्रुटी आली. कृपया वैध Excel फाईल निवडा.", "error");
+          console.error(error);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function displayExcelTable(data) {
+      const tableContainer = document.getElementById('excelTableContainer');
+      const statsContainer = document.getElementById('statsContainer');
+      
+      if (!data || data.length === 0) {
+        tableContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <h3>डेटा सापडला नाही</h3>
+            <p>कृपया Excel फाईल अपलोड करा किंवा शोध प्रश्न प्रविष्ट करा</p>
+          </div>
+        `;
+        statsContainer.style.display = 'none';
+        return;
+      }
+
+      statsContainer.style.display = 'flex';
+      
+      let tableHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              ${Object.keys(data[0]).map(header => `<th>${header}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      data.forEach(row => {
+        tableHTML += `
+          <tr>
+            ${Object.values(row).map(val => `<td>${val !== undefined && val !== null ? val : ''}</td>`).join('')}
+          </tr>
+        `;
+      });
+
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+
+      tableContainer.innerHTML = tableHTML;
+    }
+
+    function searchExcelTable() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      
+      if (!input) {
+        filteredExcelData = [...excelData];
+      } else {
+        filteredExcelData = excelData.filter(row => {
+          return Object.values(row).some(val =>
+            val?.toString().toLowerCase().includes(input)
+          );
+        });
+      }
+      
+      updateExcelStats();
+      displayExcelTable(filteredExcelData);
+    }
+
+    function updateExcelStats() {
+      document.getElementById('totalRows').textContent = excelData.length;
+      document.getElementById('filteredRows').textContent = filteredExcelData.length;
+      document.getElementById('totalColumns').textContent = excelData.length > 0 ? Object.keys(excelData[0]).length : 0;
+    }
+
+    // Application Status Check
+    function checkApplicationStatus() {
+      window.open("https://revenue.mahaonline.gov.in/ApplicationSearchStatus/ApplicationStatus.aspx?ServiceID=1&sDist=529", "_blank");
+    }
+    function displayStatusResult(applicationId) {
+      const statusResult = document.getElementById('statusResult');
+      const timeline = document.getElementById('statusTimeline');
+      
+      // Mock data
+      const statusData = {
+        appId: applicationId,
+        currentStatus: 'प्रक्रिया पूर्ण',
+        applicationDate: '१५ जून २०२३',
+        lastUpdate: '२५ जून २०२३, १०:३० AM',
+        progress: 100,
+        timeline: [
+          { step: 'अर्ज प्राप्त', status: 'पूर्ण', date: '१५ जून २०२३, ११:०० AM' },
+          { step: 'तपासणी', status: 'पूर्ण', date: '१८ जून २०२३, ०३:४५ PM' },
+          { step: 'मंजुरी', status: 'पूर्ण', date: '२२ जून २०२३, ०९:३० AM' },
+          { step: 'प्रमाणपत्र जनरेशन', status: 'पूर्ण', date: '२५ जून २०२३, १०:३० AM' }
+        ]
+      };
+      
+      // Update status
+      document.getElementById('statusAppId').textContent = statusData.appId;
+      document.getElementById('statusCurrent').textContent = statusData.currentStatus;
+      document.getElementById('statusDate').textContent = statusData.applicationDate;
+      document.getElementById('statusUpdate').textContent = statusData.lastUpdate;
+      document.getElementById('statusProgress').style.width = `${statusData.progress}%`;
+      
+      // Update timeline
+      timeline.innerHTML = '';
+      statusData.timeline.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.step}</td>
+          <td><span class="status-badge status-complete">${item.status}</span></td>
+          <td>${item.date}</td>
+        `;
+        timeline.appendChild(row);
+      });
+      
+      // Show result
+      statusResult.style.display = 'block';
+    }
+    
+    // Initialize recent downloads
+    updateRecentDownloads();
+    
+    // Focus on first input when page loads
+    window.onload = () => {
+      document.getElementById("codeInput1").focus();
+    };
+  </script>
+</body>
+</html>
