@@ -769,7 +769,7 @@
 
     /* Excel Section in Download Tab */
     .download-excel-section {
-      margin-top: 30px;
+      margin-top: 10px;
       background-color: var(--white);
       border-radius: 10px;
       padding: 20px;
@@ -780,7 +780,7 @@
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
-        gap: 15px;
+        gap: 5px;
         text-align: center;
       }
       
@@ -789,12 +789,12 @@
       }
       
       .app-title h1 {
-        font-size: 1.6rem;
+        font-size: 1.0rem;
       }
       
       .tab-container {
         overflow-x: auto;
-        padding-bottom: 5px;
+        padding-bottom: 1px;
       }
       
       .tab {
@@ -817,20 +817,20 @@
 
     @media (max-width: 480px) {
       .tab-content {
-        padding: 20px 15px;
+        padding: 20px 5px;
       }
       
       .app-title h1 {
-        font-size: 1.4rem;
+        font-size: 1.0rem;
       }
       
       .app-title p {
-        font-size: 0.9rem;
+        font-size: 0.3rem;
       }
       
       .footer-links {
         flex-direction: column;
-        gap: 5px;
+        gap: 4px;
       }
     }
   </style>
@@ -932,6 +932,69 @@
             <button class="btn" onclick="downloadFile(3)">
               <span class="spinner" id="spinner3" style="display: none;"></span>
               <i class="fas fa-plus-circle"></i> दस्तऐवज जोडा
+            </button>
+          </div>
+        </div>
+
+        <!-- Document Upload -->
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="service-title">Print Receipt</div>
+          </div>
+          <div class="service-body">
+            <div class="input-group">
+              <label class="input-label" for="codeInput3">दस्तऐवज क्रमांक</label>
+              <i class="input-icon fas fa-key"></i>
+              <input type="text" id="codeInput3" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+            </div>
+            <button class="btn" onclick="Print Receipt(3)">
+              <span class="spinner" id="spinner3" style="display: none;"></span>
+              <i class="fas fa-plus-circle"></i> Print Receipt
+            </button>
+          </div>
+        </div>
+
+        <!-- Document Upload -->
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="service-title">Add Content</div>
+          </div>
+          <div class="service-body">
+            <div class="input-group">
+              <label class="input-label" for="codeInput3">दस्तऐवज क्रमांक</label>
+              <i class="input-icon fas fa-key"></i>
+              <input type="text" id="codeInput3" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+            </div>
+            <button class="btn" onclick="Add Content(3)">
+              <span class="spinner" id="spinner3" style="display: none;"></span>
+              <i class="fas fa-plus-circle"></i> Add Content
+            </button>
+          </div>
+        </div>
+
+        <!-- Document Upload -->
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="service-title">Add Content</div>
+          </div>
+          <div class="service-body">
+            <div class="input-group">
+              <label class="input-label" for="codeInput3">दस्तऐवज क्रमांक</label>
+              <i class="input-icon fas fa-key"></i>
+              <input type="text" id="codeInput3" class="input-field" placeholder="उदा: 25529427712536000XXXXX">
+            </div>
+            <button class="btn" onclick="Add Content(3)">
+              <span class="spinner" id="spinner3" style="display: none;"></span>
+              <i class="fas fa-plus-circle"></i> Add Content
             </button>
           </div>
         </div>
